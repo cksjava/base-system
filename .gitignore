@@ -1,0 +1,23 @@
+# Machine-specific build configuration (UUIDs, passwords)
+config/build.conf
+
+# Optional LFS book tarball (parsed HTML lives in 13.0/)
+LFS-BOOK-13.0.tar.xz
+
+# Host wget cache if kept inside the repo (default: sibling ../sources/)
+/sources/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# Editors and OS junk
+*~
+*.swp
+*.swo
+.DS_Store
+.idea/
+.vscode/
