@@ -16,12 +16,13 @@ lfs_source_builder_libs() {
   # shellcheck disable=SC1091
   source "${ROOT}/config/vars.sh"
   # shellcheck disable=SC1091
+  source "${ROOT}/lib/lfs-common.sh"
+  # shellcheck disable=SC1091
   source "${ROOT}/lib/lfs-configure.sh"
   lfs_ensure_build_config
+  lfs_fix_build_conf_perms
   # shellcheck disable=SC1091
   source "${ROOT}/config/vars.sh"
-  # shellcheck disable=SC1091
-  source "${ROOT}/lib/lfs-common.sh"
 }
 
 BUILD_LOG=""
@@ -74,6 +75,7 @@ copy_builder_to_sources() {
     --exclude 'LFS-BOOK-13.0.tar.xz' \
     --exclude '.git' \
     "${ROOT}/" "${LFS}/sources/builder/"
+  lfs_fix_build_conf_perms
 }
 
 usage() {
@@ -119,8 +121,11 @@ case "${cmd}" in
     # shellcheck disable=SC1091
     source "${ROOT}/config/vars.sh"
     # shellcheck disable=SC1091
+    source "${ROOT}/lib/lfs-common.sh"
+    # shellcheck disable=SC1091
     source "${ROOT}/lib/lfs-configure.sh"
     lfs_interactive_configure 1
+    lfs_fix_build_conf_perms
     exit 0
     ;;
 esac

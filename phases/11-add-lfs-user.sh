@@ -14,6 +14,8 @@ if ! getent passwd lfs >/dev/null 2>&1; then
   useradd -s /bin/bash -g lfs -m -k /dev/null lfs
 fi
 
+lfs_fix_build_conf_perms
+
 chown -v lfs "${LFS}"/{usr{,/*},var,etc,tools,sources}
 case $(uname -m) in
   x86_64) chown -v lfs "${LFS}/lib64" ;;

@@ -26,6 +26,21 @@ export MAKE_JOBS
 LOG_DIR="${SOURCES}/.lfs-build-logs"
 mkdir -p "${LOG_DIR}" "${SOURCES}"
 
+# ch.5–6 runs as lfs; build.conf must be group-readable (not world-readable).
+lfs_fix_build_conf_perms() {
+  local conf
+  for conf in \
+    "${ROOT:-}/config/build.conf" \
+    "${_BUILDER_ROOT}/config/build.conf" \
+    "${LFS:-}/sources/builder/config/build.conf"; do
+    [[ -f "${conf}" ]] || continue
+    if getent group lfs >/dev/null 2>&1; then
+      chgrp lfs "${conf}" 2>/dev/null || true
+      chmod 640 "${conf}" 2>/dev/null || true
+    fi
+  done
+}
+
 # Name of the script being executed (package or phase .sh).
 SCRIPT_NAME="$(basename "${BASH_SOURCE[1]:-${BASH_SOURCE[0]}}")"
 
@@ -361,6 +376,7 @@ lfs_run_as_lfs() {
   local script=$1
   local lfs_home
   lfs_home="$(lfs_lfs_home)"
+  lfs_fix_build_conf_perms
   lfs_write_lfs_bashrc "${lfs_home}"
   lfs_run_script_as_lfs "${script}"
 }
