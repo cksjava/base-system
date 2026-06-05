@@ -52,7 +52,7 @@ LFS_YES=1 sudo ./lfs-build.sh all   # accept all bracketed defaults
 
 | Issue | Mitigation |
 |--------|------------|
-| `/dev/sdX` order changes across boots | UUIDs in `fstab` / `grub.cfg` / `mount -U` |
+| `/dev/sdX` order changes across boots | UUIDs in `fstab` / `grub.cfg`; host builder mounts by partition path |
 | Repartition or reformat changes UUID | Re-run `sudo ./lfs-build.sh configure` |
 | Chroot has no host `blkid` for your disk | UUIDs resolved on host and stored in `build.conf` (rsync’d into chroot) |
 | Separate `/boot` partition | Not automated yet; kernel/initrd paths in `grub.cfg` assume `/boot` on root FS |

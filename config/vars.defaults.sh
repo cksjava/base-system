@@ -1,7 +1,7 @@
 # Default values for prompts and non-disk settings (safe to commit).
 # Machine-specific values live in config/build.conf (generated, gitignored).
 
-# --- Disk (partition paths are only used to discover UUIDs) ---
+# --- Disk (partition paths for host mount; UUIDs written to build.conf for fstab/grub) ---
 export LFS_DEFAULT="${LFS_DEFAULT:-/mnt/lfs}"
 export ROOT_PARTITION_DEFAULT="${ROOT_PARTITION_DEFAULT:-/dev/sda2}"
 export ESP_PARTITION_DEFAULT="${ESP_PARTITION_DEFAULT:-/dev/sda1}"
