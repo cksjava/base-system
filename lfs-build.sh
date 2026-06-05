@@ -93,9 +93,11 @@ Commands:
   stage4       Chapter 8 final system inside chroot
   system       Chapter 9–10 system configuration
   sync         Copy builder tree into \$LFS/sources/builder
+  teardown     Unmount \$LFS and all nested mounts (kernfs, sources bind, …)
+  reset-root   teardown + mkfs on ROOT_PARTITION (destroys partition data)
 
 Environment:
-  LFS_YES=1           Accept all configuration defaults without prompting
+  LFS_YES=1           Accept configure defaults; skip reset-root confirmation
   LFS_RECONFIGURE=1   Force re-run configuration prompts
 
 Sources (differs from LFS book ch.3):
@@ -126,6 +128,33 @@ case "${cmd}" in
     source "${ROOT}/lib/lfs-configure.sh"
     lfs_interactive_configure 1
     lfs_fix_build_conf_perms
+    exit 0
+    ;;
+  teardown|umount)
+    # shellcheck disable=SC1091
+    source "${ROOT}/config/vars.sh"
+    # shellcheck disable=SC1091
+    source "${ROOT}/lib/lfs-common.sh"
+    lfs_umount_lfs_tree
+    exit 0
+    ;;
+  reset-root|wipe-root)
+    # shellcheck disable=SC1091
+    source "${ROOT}/config/vars.sh"
+    # shellcheck disable=SC1091
+    source "${ROOT}/lib/lfs-common.sh"
+    if [[ -z "${LFS_YES:-}" ]]; then
+      echo "This will UNMOUNT ${LFS} and FORMAT ${ROOT_PARTITION:-<unset>} (${ROOT_FSTYPE:-?})."
+      echo "All data on the root partition will be destroyed."
+      read -erp "Type YES to continue: " ans
+      if [[ "${ans}" != YES ]]; then
+        echo "Aborted."
+        exit 1
+      fi
+    fi
+    lfs_umount_lfs_tree
+    lfs_format_root_partition
+    echo "Done. Re-run: sudo ./lfs-build.sh configure && sudo ./lfs-build.sh all"
     exit 0
     ;;
 esac
